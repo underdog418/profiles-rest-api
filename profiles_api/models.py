@@ -14,13 +14,15 @@ class UserProfileManager(BaseUserManager):
             raise ValueError("User must have an email address")
 
         #make the email letter case insensitive a method from BaseUserManager
-        email = self.normalize_email(email)
-        # create user model object without the password by using .model attribute from BaseuserManager class https://stackoverflow.com/questions/51163088/self-model-in-django-custom-usermanager
-        user = self.model(email=email, name=name)
+        #email = self.normalize_email(email)
+        # .normalize_email is a BaseuserManager class method
+        """create user model object without the password by using .model attribute from BaseUserManager class https://stackoverflow.com/questions/51163088/self-model-in-django-custom-usermanager
+        https://docs.djangoproject.com/en/3.0/topics/auth/customizing/ """
+        #user = self.model(email=email, name=name)
+        user = self.model(email=self.normalize_email(email), name=name)
         # store the password not as string but an encripted to hash
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
     def create_superuser(self, email, name, password):
